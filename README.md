@@ -10,7 +10,7 @@
 
 ---
 ## Play
-[Click to Play The Game](https://theaiplayground.com/gursimar04/bot/StarWarsBot)
+[Click to Play The Game](https://theaiplayground.com/gursimar04/bot/StarWarsBot/view)
 
 ## Description
 Based on Swapi API, The bot allows the user to get all the details one can ask about any StarWars character, Film or Spaceship. The bot tries to replicate R2D2 (from StarWars) for add a personal touch. Apart from gaining information the bot can also quiz you on using a random trivia question (out of 10). Finally, if one ever wanted to know which star wars character they most resemble to they can find that out too!! By just typing interests, hobbies, personality traits and favorite powers, one can find out the name of the StarWars Character they resemble the most. 
