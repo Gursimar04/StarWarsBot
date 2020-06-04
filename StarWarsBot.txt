@@ -1,0 +1,512 @@
+var siet=0;
+var page=0;
+var iterate=0;
+var step=-1;
+var qnum=0;
+fmessage();
+question();
+function fmessage()
+{
+	Bot.send("Hi I am R2D2!! You might know me from starwars!!"+
+			 " I have been made aware that you are a big Star Wars fan!!"+
+			" So you have my infinite knowledge at you disposal.");
+	step=0;		
+}
+async function question()
+{
+	await Bot.sleep(1000);
+	if(step===0)
+	{
+    Bot.send("You can reply using atleast the first 5 characters of the main word in any case!!");
+    await Bot.send(3000);
+		Bot.send("Would you like to know about a character?");
+		await Bot.sleep(2000);
+		Bot.send("Or Would you like to know about a starship?");
+		await Bot.sleep(2000);
+		Bot.send("Or about a movie perhaps?");
+		await Bot.sleep(1000);
+		Bot.send("Maybe test out your skill by answering a trivia?.(Type trivia)");
+		await Bot.sleep(2000);
+		Bot.send("Or find out which star wars character are you?(Type amI)");
+		await Bot.sleep(2000);
+		step=1;
+	}
+}
+async function respond (inputText) {
+
+    if(step==1)
+	{
+		let check=inputText;
+
+		if(check.toUpperCase().indexOf("CHAR")!=-1){
+			Bot.send("Which character are you looking for?");
+			step=3;
+		}
+
+		else if(check.toUpperCase().indexOf("STAR")!=-1){
+			Bot.send("Which starship are you looking for?");
+			step=4;
+		}
+
+		else if(check.toUpperCase().indexOf("MOV")!=-1){
+			Bot.send("Which movies are you looking for?");
+			step=5;
+		}
+		else if(check.toUpperCase().indexOf("TRIV")!=-1){
+			Bot.send("Here is a question for you!! Answer in the form of a,b,c or d.");
+			generatequiz();
+			step=12;
+		}
+		else if(check.toUpperCase().indexOf("AMI")!=-1){
+			Bot.send("Type in all the intersts, skills, and personality-traits which best describe you alongside your favourite special powers(atleast 7) and find out which StarWars character are you");
+			step=13;
+		}	
+
+		else{
+			Bot.send("You have somehow managed to bamboozle me the source of infinite knowledge. Try again");
+			step=0;
+			question();
+		}
+	}
+
+	else if(step==3){
+		let name=inputText;
+		findPeople(name);
+		await Bot.sleep(2000);
+		if(siet===0){
+			Bot.send("I was not able to find the character please type yes to try again"+
+				     "or type back to start again");
+			step=6;		 
+		}
+		else{
+			let cpr= await CampK12.fetch("Get","https://swapi.dev/api/people/?search=a&page="+page);
+			let cpr1=cpr.results[iterate].name;
+			Bot.send(cpr1+", great choice. What would you like to know?");
+			step=9;
+
+			
+ 			 Bot.send("height, mass, hair colour, skin colour, eye colour, birth year, gender, "+
+			  		  "homeworld, films, species, starships. Type Back to go back");
+		}
+
+	}	
+	
+
+	else if(step===4){
+		let name=inputText;
+		findStarships(name);
+		await Bot.sleep(2000);
+		if(siet===0){
+			Bot.send("I was not able to find the starship please type yes to try again"+
+				     "or type back to start again");
+			step=7;		 
+		}
+		else{
+			let cpr= await CampK12.fetch("Get","https://swapi.dev/api/starships/?search=a&page="+page);
+			let cpr1=cpr.results[iterate].name;
+			Bot.send(cpr1+", great choice. What would you like to know?");
+			step=10;
+
+			Bot.send("model, manufacturer, cost, length, max speed, crew, passengers, "+
+			  		  "capacity, films, consumables,class,rating,MGLT, pilots. Type Back to go back");
+		}
+	}
+
+	else if(step===5){
+		let name=inputText;
+		movies(name);
+		await Bot.sleep(2000);
+		if(siet===0){
+			Bot.send("I was not able to find the movie please yes to try again"+
+				     "or type back to start again");
+			step=8;		 
+		}
+		else{
+			let cpr= await CampK12.fetch("Get","https://swapi.dev/api/films/");
+			let cpr1=cpr.results[iterate].title;
+			Bot.send(cpr1+", great choice. What would you like to know?");
+			step=11;
+			Bot.send("director, producer, release date, characters, planets, starships."+
+			         "Type Back to go back");
+		}
+	}
+
+		else if(step==6){
+		let retry=inputText;
+		if(retry.toUpperCase()=="YES"){
+			step=3;
+			Bot.send("Which character are you looking for?");
+		}
+		else{
+			step=0;
+			question();
+		}
+		
+	}	
+	
+
+	else if(step===7){
+		let retry=inputText;
+		if(retry.toUpperCase()=="YES"){
+			step=4;
+			Bot.send("Which starship are you looking for?");
+		}
+		else{
+			step=0;
+			question();
+		}
+	}
+
+	else if(step===8){
+		let retry=inputText;
+		if(retry.toUpperCase()=="YES"){
+			step=5;
+			Bot.send("Which movie are you looking for?");
+		}
+		else{
+			step=0;
+			question();
+		}
+	}
+	else if(step===9){
+		let d=inputText;
+		if(d.toUpperCase().indexOf("BACK")!=-1){
+			step=0;
+			question();
+		}
+		else{
+			datafind(d);
+			await Bot.sleep(3000);
+			Bot.send("What else would you like to know?");
+			Bot.send("height, mass, hair colour, skin colour, eye colour, birth year, gender, "+
+			  		  "homeworld, films, species, starships. Type Back to go back");
+		}
+		
+	}
+	else if(step===10){
+		let d=inputText;
+		if(d.toUpperCase().indexOf("BACK")!=-1){
+			step=0;
+			question();
+		}
+		else{
+			datafindm(d);
+			await Bot.sleep(3000);
+			Bot.send("What else would you like to know?");
+			Bot.send("model, manufacturer, cost, length, max speed, crew, passengers, "+
+			  		  "capacity, films, consumables,class,rating,MGLT, pilots. Type Back to go back");
+		}
+		
+	}
+	else if(step===11){
+		let d=inputText;
+		if(d.toUpperCase().indexOf("BACK")!=-1){
+			step=0;
+		}
+		else{
+			moviedata(d);
+			await Bot.sleep(3000);
+			Bot.send("What else would you like to know?");
+			Bot.send("director, producer, release date, characters, planets, starships."+
+			         "Type Back to go back");
+		}
+	}
+
+	else if(step==12)
+	{
+		var correct=["A","D","A","B","A","C","B","C","B","A"];
+		var check=inputText;
+		if(check.toUpperCase()==correct[qnum]){
+			Bot.send("Correct. You really are a true fan.");
+		}
+		else{
+			Bot.send("Incorrect. the correct answer is "+correct[qnum]);
+		}
+		step=0;
+		question();
+	}
+	else if(step==13){
+		var ansS=await CampK12.classify("StarWarsModel", inputText);
+		Bot.send("You resemble the great "+ansS);
+		step=0;
+		await Bot.sleep(1000);
+		question();
+	}
+}
+async function movies(property){
+	page=0; iterate=0; siet=0;
+  var allM=await CampK12.fetch("GET","https://swapi.dev/api/films/");
+  for(var i=0;i<allM.results.length;i++){
+    if((allM.results[i].title).toUpperCase().indexOf(property.toUpperCase())!=-1){
+	  siet=1;	
+      iterate=i;
+    }
+  }
+}
+async function moviedata(property){
+	let allM=await CampK12.fetch("GET","https://swapi.dev/api/films/");
+	let char= allM.results[iterate];
+
+	 if( property.toLowerCase().indexOf("directo")!=-1)
+	   Bot.send( char.title+" was directed by "+char.director);
+
+  else if( property.toLowerCase().indexOf("producer")!=-1)
+	   Bot.send( char.title+" was produced by "+char.producer);
+
+  else if( property.toLowerCase().indexOf("rele")!=-1)
+	   Bot.send( char.title+" was ewlwased on "+char.release_date);  	   	   
+
+  else if( property.toLowerCase().indexOf("charac")!=-1){
+	  let fi= char.characters;
+	  let output=char.title+" stars ";
+	  for(let i=0;i<fi.length;i++){
+		  var f=await CampK12.fetch("GET","https"+fi[i].slice(4,fi[i].length));
+		  if(i==fi.length-1)
+		  {
+			  output+=" and";
+		  }
+		  output= output+" "+f.name+",";
+	  }
+	  Bot.send( output);
+  }
+
+  else if( property.toLowerCase().indexOf("plan")!=-1){
+	  let fi= char.planets;
+	  let output=char.title+" is shot on ";
+	  for(let i=0;i<fi.length;i++){
+		  var f=await CampK12.fetch("GET","https"+fi[i].slice(4,fi[i].length));
+		  if(i==fi.length-1)
+		  {
+			  output+=" and";
+		  }
+		  output= output+" "+f.name+",";
+	  }
+	  Bot.send( output);
+  }
+  else if( property.toLowerCase().indexOf("starsh")!=-1){
+	  let fi= char.characters;
+	  let output=char.title+" displays ";
+	  for(let i=0;i<fi.length;i++){
+		  var f=await CampK12.fetch("GET","https"+fi[i].slice(4,fi[i].length));
+		  if(i==fi.length-1)
+		  {
+			  output+=" and";
+		  }
+		  output= output+" "+f.name+",";
+	  }
+	  Bot.send( output);
+  }	
+  else{
+	  Bot.send("Not a defined property.");
+  } 
+
+}
+
+async function findStarships(fstar){
+  siet=0;page=0;iterate=0;
+  for(var i=1;i<7;i++)
+   {
+     Bot.send(i);
+     var allPs=await CampK12.fetch("GET","https://swapi.dev/api/starships/?search=a&page="+i);
+     finds(allPs,fstar);
+      if(siet==1)
+      {
+          page=i;
+          Bot.send("found"+ page+iterate);
+          break;
+      }
+   }
+}
+
+async function findPeople(charact){
+  siet=0;page=0;iterate=0;
+  for(var i=1;i<7;i++)
+   {
+     var allP=await CampK12.fetch("GET","https://swapi.dev/api/people/?search=a&page="+i);
+     finds(allP,charact);
+      if(siet==1)
+      {
+        page=i;
+        break;
+      }
+   }
+}
+
+
+async function finds(allPeople,lst){
+  for(let i=0;i<allPeople.results.length;i++)
+  {
+    if(allPeople.results[i].name.toUpperCase().indexOf(lst.toUpperCase()!=-1)){
+      iterate=i;
+      siet=1;
+      break;
+    }   
+  }
+}
+
+async function datafind(property){
+  var chars=await CampK12.fetch("GET","https://swapi.dev/api/people/?search=a&page="+page);
+  var char=chars.results[iterate];
+  if( property.toLowerCase().indexOf("heig")!=-1)
+	   Bot.send( char.name+" is "+char.height+" cm tall.");
+
+  else if( property.toLowerCase().indexOf("mass")!=-1)
+	   Bot.send( "Mass of "+char.name+" is "+char.mass);
+
+  else if( property.toLowerCase().indexOf("skin")!=-1)
+	   Bot.send( char.name+" is of "+char.skin_color+" complexion.");
+
+  else if( property.toLowerCase().indexOf("hair")!=-1)
+	   Bot.send( char.name+" has "+char.hair_color +" hair");
+
+  else if( property.toLowerCase().indexOf("eye")!=-1)
+	   Bot.send( char.name+" has "+char.eye_color +" eyes");
+
+  else if( property.toLowerCase().indexOf("birth")!=-1)
+	   Bot.send( char.name+" was born on "+char.birth_year);
+
+  else if( property.toLowerCase().indexOf("gender")!=-1)
+	   Bot.send( char.name+" identifies as "+char.gender);	   	   	   
+
+
+  else if( property.toLowerCase().indexOf("homew")!=-1){
+	  let planet= await CampK12.fetch("GET",char.homeworld).name;
+	  Bot.send( char.name+" is from "+planet);
+  }
+
+  else if( property.toLowerCase().indexOf("film")!=-1){
+	  let fi= char.films;
+	  let output=char.name+" has been featured in ";
+	  for(let i=0;i<fi.length;i++){
+		  var f=await CampK12.fetch("GET","https"+fi[i].slice(4,fi[i].length));
+		  if(i==fi.length-1)
+		  {
+			  output+=" and";
+		  }
+		  output= output+" "+f.title+",";
+	  }
+	  Bot.send( output);
+  }
+  else if( property.toLowerCase().indexOf("specie")!=-1){
+	  Bot.send( char.name+" is of "+char.speices+" species");
+  }	
+  else if( property.toLowerCase().indexOf("starsh")!=-1){
+	  let st= char.starships;
+	  let output=char.name+" has travelled in ";
+	  for(let i=0;i<st.length;i++){
+		  var f=await CampK12.fetch("GET","https"+st[i].slice(4,st[i].length));
+		  if(i==st.length-1)
+		  {
+			  output+=" and";
+		  }
+		  output= output+" "+f.name+",";
+	  }
+	  Bot.send( output);
+  }	
+  else{
+	  Bot.send("Not a defined property.");
+  }           
+}
+
+async function datafindm(property){	
+  var chars=await CampK12.fetch("GET","https://swapi.dev/api/starships/?search=a&page="+page);
+  var char=chars.results[iterate];
+  if( property.toLowerCase().indexOf("model")!=-1)
+	   Bot.send( char.name+"'s models name is "+char.model);
+
+  else if( property.toLowerCase().indexOf("manufact")!=-1)
+	   Bot.send( char.name+" was manufactured by "+char.manufacturer);
+
+  else if( property.toLowerCase().indexOf("cost")!=-1)
+	   Bot.send( char.name+" costs "+char.cost_in_credits);
+
+  else if( property.toLowerCase().indexOf("lengt")!=-1)
+	   Bot.send( "Length of "+ char.name+" is "+char.length);
+
+  else if( property.toLowerCase().indexOf("speed")!=-1)
+	   Bot.send( "Max atmospheric speed of "+ char.name+" is "+char.max_atmosphering_speed);
+
+  else if( property.toLowerCase().indexOf("crew")!=-1)
+	   Bot.send( "Crew of "+ char.name+" consistes of "+char.crew+" crew members");
+
+  else if( property.toLowerCase().indexOf("passenge")!=-1)
+	   Bot.send( char.name+" has been boarded by "+char.passengers+" passengers");	   	   	   
+
+
+  else if( property.toLowerCase().indexOf("cargo")!=-1){
+	  Bot.send( char.name+" has a cargo capacity of "+char.cargo_capacity);
+  }
+
+  else if( property.toLowerCase().indexOf("film")!=-1){
+	  let fi= char.films;
+	  let output=char.name+" has been featured in ";
+	  for(let i=0;i<fi.length;i++){
+		  var f=await CampK12.fetch("GET","https"+fi[i].slice(4,fi[i].length));
+		  if(i==fi.length-1)
+		  {
+			  output+=" and";
+		  }
+		  output= output+" "+f.title+",";
+	  }
+	  Bot.send( output);
+  }
+  else if( property.toLowerCase().indexOf("consumabl")!=-1){
+	  Bot.send( char.name+" has  "+char.consumables+" worth of consumables");
+  }	
+  else if( property.toLowerCase().indexOf("class")!=-1){
+	  Bot.send( char.name+" belongs to  "+char.starship_class+" class");
+  }	
+  else if( property.toLowerCase().indexOf("rating")!=-1){
+	  Bot.send( char.name+" has a rating of "+char.hyperdrive_rating);
+  }
+  else if( property.toLowerCase().indexOf("MGLT")!=-1){
+	  Bot.send( char.name+" has a MGLT of "+char.MGLT);
+  }	
+  else if( property.toLowerCase().indexOf("pilots")!=-1){
+	  let fi= char.pilots;
+	  let output=char.name+" has been driven by ";
+	  for(let i=0;i<fi.length;i++){
+		  var f=await CampK12.fetch("GET","https"+fi[i].slice(4,fi[i].length));
+		  if(i==fi.length-1)
+		  {
+			  output+=" and";
+		  }
+		  output= output+" "+f.name+",";
+	  }
+	  Bot.send( output);
+  }
+  else{
+	  Bot.send("Not a defined property.");
+  }            
+}
+
+function generatequiz(){
+	var ques=["Which Star Wars movie was filmed entirely in the studio?",
+				"Which of the three main heroes (Luke, Leia, and Han Solo) in the first Star Wars"+
+				" trilogy refused to sign a three picture deal?",
+				"What color is Mace Windu's lightsaber?",
+				"The Star Wars Holiday Special marked the first appearance of which Star Wars"+
+				" character?",
+				"What actor pulled out of Episode III: Revenge of the Sith when he discovered that"+
+				" non-union actors were being used in the film?",
+				"Who is the only non Jedi in the original Star Wars trilogy to use a lightsaber?",
+				"What character did George Lucas consider making a midget?",
+				"Who served as Jabba the Hutt's chief of staff?",
+				"Approximately how many languages can C-3PO speak?",
+				" In Episode VI: Return of the Jedi, the growls and sounds of the Rancor in" +
+				" Jabba's Palace were actually made by what animal?"];
+	var options=[["A.Revenge of th Sith","B.Return of the Jedi","C.Star Wars","D.Attack of the clones"],
+				 ["A.Mark Hamill","B.Carrie Fisher","C.They All signed","D.Harrison Ford"],
+				 ["A.Purple","B.Blue","C.Green","D.Black"],
+				 ["A.JabbaThe hutt","B.Boba Fett","C.Jar Jar Binks","D.Lando Carlison"],
+				 ["A.Gary Oldman","B.Gary Coleman","C.Mel GIbson","D.Geore Clooney"],
+				 ["A.R2-D2","B.Princess Leia","C.Han Solo","D.Chewbacca"],
+				 ["A.Princess LEIA","B.Luke Skywalker","C.Jar Jar Binks","D.Chewbacca"],
+				 ["A.Maz Kanta","B.Sarlacc","C.Bib Fortuna","D.Nute Gunray"],
+				 ["A.6 thousand","B.6 million","C.6 billion","D6 trillion"],
+				 ["A.Dachsund","B.Pigeon","C.Panther","D.Wolverine"],
+				];
+	qnum=Math.floor(Math.random()*10);
+	Bot.send(ques[qnum]);
+	Bot.send(options[qnum]);
+}
